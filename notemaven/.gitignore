@@ -1,0 +1,10 @@
+
+*
+
+!notemaven/
+!notemaven/src/
+!notemaven/src/**
+
+
+!notemaven/pom.xml
+!notemaven/memoria.csv
