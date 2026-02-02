@@ -6,9 +6,13 @@ import Note.NotaConAllert;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class MainPage extends javax.swing.JFrame {
 
+    private static final Logger logger = LogManager.getLogger(MainPage.class);
     ListaNote listaNote = new ListaNote();
     Memoria memoria = new Memoria();
 
@@ -84,6 +88,7 @@ public class MainPage extends javax.swing.JFrame {
 
     
     public MainPage() {
+        logger.info("Inizializzazione MainPage...");
         initComponents();
 
         updateComponenteListaNoteModel();
@@ -262,20 +267,23 @@ public class MainPage extends javax.swing.JFrame {
         if (allertOptionButton.isSelected()) {
             nuovaNota = new NotaConAllert(inputTitolo.getText(), inputTesto.getText(), allertOptionButton.isSelected());
             listaNote.pushaNotaInList(nuovaNota);
+            logger.debug("Creata nuova nota con allert: {}", nuovaNota.titolo);
         } else {
             nuovaNota = new Nota(inputTitolo.getText(), inputTesto.getText());
             listaNote.pushaNotaInList(nuovaNota);
-
+            logger.debug("Creata nuova nota: {}", nuovaNota.titolo);
         }
 
         try {
             memoria.salvaEControllaDuplicatiInCSV(nuovaNota);
             updateComponenteListaNoteModel();
-            inputTitolo.setText("");
-            inputTesto.setText("");
+            inputTitolo.setText("Inserisci un titolo");
+            inputTesto.setText("Scrivi una nota");
             allertOptionButton.setSelected(false);
 
+            logger.info("Nota salvata con successo: {}", nuovaNota.titolo);
         } catch (Exception ex) {
+            logger.error("Errore durante il salvataggio della nota: {}", nuovaNota.titolo, ex);
             System.out.println(ex);
         }
 
@@ -292,6 +300,7 @@ public class MainPage extends javax.swing.JFrame {
         Object valoreSelezionato = componenteListaNote.getSelectedValue();
 
         if (valoreSelezionato != null) {
+            logger.info("Apertura nota selezionata: {}", valoreSelezionato);
             final int posizioneOggettoCorrente = listaNote.returnJsonPositionInList(valoreSelezionato.toString());
 
             java.awt.EventQueue.invokeLater(new Runnable() {
@@ -347,7 +356,10 @@ public class MainPage extends javax.swing.JFrame {
 
             labelTitoloInvalido.setVisible(nomeEsistente || titoloUnivoco.length() == 0);
 
-            bottoneSalvaNota.setEnabled(!nomeEsistente && testoInput.length() > 0);
+            bottoneSalvaNota.setEnabled(!nomeEsistente && testoInput.length() > 0 
+                    && !"".equals(titoloUnivoco) 
+                    && !"Inserisci un titolo".equals(titoloUnivoco)
+            );
 
         }
 
