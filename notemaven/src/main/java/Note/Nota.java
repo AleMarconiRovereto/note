@@ -2,9 +2,11 @@ package Note;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Nota {
+public class Nota implements Serializable {
+    private static final long serialVersionUID = 1L;
     public LocalDateTime timestamp;
     public String titolo;
     public String testo;
@@ -14,13 +16,13 @@ public class Nota {
         this.titolo = titolo;
         this.testo = testo;
     }
-    
+
     public Nota(String titolo, String testo, LocalDateTime timestamp) {
         this.timestamp = timestamp;
         this.titolo = titolo;
         this.testo = testo;
     }
-    
+
     public boolean isTitoloEqual(String outsideName) {
         return this.titolo.equals(outsideName);
     }
@@ -57,16 +59,7 @@ public class Nota {
         }
         return true;
     }
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");

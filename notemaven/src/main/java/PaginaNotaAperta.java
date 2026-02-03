@@ -4,6 +4,7 @@ import Note.ListaNote;
 import Note.Nota;
 import Note.NotaConAllert;
 import java.time.format.DateTimeFormatter;
+import utils.LoggerClass;
 
 public class PaginaNotaAperta extends javax.swing.JFrame {
 
@@ -13,7 +14,8 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
     ListaNote listaNote;
     int currentIndex;
 
-    // prende gli argomenti necssari tra cui il context esterno per aggiornare il model
+    // prende gli argomenti necssari tra cui il context esterno per aggiornare il
+    // model
     public PaginaNotaAperta(Memoria memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna,
             int indexNota, javax.swing.JFrame paginaPadreEsterna) {
         this.contestoPrincipale = contestoPrincipale;
@@ -25,8 +27,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         if (paginaPadre != null) {
             paginaPadre.setEnabled(false);
         }
-        
-        
+
         getContentPane().setBackground(new java.awt.Color(255, 255, 153));
         inputTestoNota.setBackground(new java.awt.Color(255, 255, 204));
         if (indexNota != -1) {
@@ -46,9 +47,9 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         super.dispose();
     }
 
-    // utile per risolvere il problema della navigazione di note 
-    //perchè questa pagina può essere aperta da 2 pagine diverse 
-    //ognuna con la sua logica (saltare note senza alert)
+    // utile per risolvere il problema della navigazione di note
+    // perchè questa pagina può essere aperta da 2 pagine diverse
+    // ognuna con la sua logica (saltare note senza alert)
     private int findNextValidIndex(int start, boolean forward) {
         if (paginaPadre instanceof PaginaReminders) {
             int i = forward ? start + 1 : start - 1;
@@ -61,16 +62,17 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
             }
             return -1;
         }
-    
+
         int next = forward ? start + 1 : start - 1;
         if (next >= 0 && next < listaNote.listaNote.size()) {
             return next;
         }
         return -1;
     }
+
     // setta i valori da mostrare
     private void setCurrentValue(Nota notaDaMostrare) {
-        System.out.println(notaDaMostrare);
+        LoggerClass.debug("Visualizzazione nota: {}", notaDaMostrare.titolo);
         labelTitoloNota.setText(notaDaMostrare.titolo);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String stringaTime = notaDaMostrare.timestamp.format(formatter);
@@ -83,7 +85,6 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
             bottoneAllert.setSelected(false);
         }
 
-        
         btnBack.setEnabled(findNextValidIndex(currentIndex, false) != -1);
         btnNext.setEnabled(findNextValidIndex(currentIndex, true) != -1);
     }
@@ -230,20 +231,19 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         }
 
         try {
-            memoria.rimuoviDaCSV(notaVecchia);
+            memoria.rimuoviNota(notaVecchia);
             listaNote.listaNote.set(currentIndex, nuovaNota);
-            memoria.salvaEControllaDuplicatiInCSV(nuovaNota);
+            memoria.salvaNota(nuovaNota);
 
             contestoPrincipale.updateComponenteListaNoteModel();
 
-          
             if (paginaPadre instanceof PaginaReminders) {
                 ((PaginaReminders) paginaPadre).updateComponenteListaRemindersModel();
             }
 
             setCurrentValue(nuovaNota);
         } catch (Exception ex) {
-            System.out.println(ex);
+            LoggerClass.error("Errore durante il salvataggio della nota modificata", ex);
         }
     }
 
@@ -257,40 +257,35 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
 
     private void bottoneEliminaActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            memoria.rimuoviDaCSV(listaNote.listaNote.get(this.currentIndex));
+            memoria.rimuoviNota(listaNote.listaNote.get(this.currentIndex));
             listaNote.listaNote.remove(currentIndex);
 
-            
             contestoPrincipale.updateComponenteListaNoteModel();
 
-            
             if (paginaPadre instanceof PaginaReminders) {
                 ((PaginaReminders) paginaPadre).updateComponenteListaRemindersModel();
             }
 
-           
             int nextValid = findNextValidIndex(currentIndex - 1, true);
 
             if (nextValid != -1) {
                 this.currentIndex = nextValid;
                 setCurrentValue(listaNote.listaNote.get(this.currentIndex));
             } else {
-                
+
                 int prevValid = findNextValidIndex(currentIndex, false);
                 if (prevValid != -1) {
                     this.currentIndex = prevValid;
                     setCurrentValue(listaNote.listaNote.get(this.currentIndex));
                 } else {
-                    
+
                     this.dispose();
                 }
             }
         } catch (Exception e) {
-            System.out.println("Errore durante l'eliminazione: " + e);
+            LoggerClass.error("Errore durante l'eliminazione della nota", e);
         }
     }
-
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bottoneAllert;

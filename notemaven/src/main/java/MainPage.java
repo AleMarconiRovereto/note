@@ -1,4 +1,3 @@
-
 import Memoria.Memoria;
 import Note.ListaNote;
 import Note.Nota;
@@ -6,13 +5,10 @@ import Note.NotaConAllert;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import utils.LoggerClass;
 
 public class MainPage extends javax.swing.JFrame {
 
-    private static final Logger logger = LogManager.getLogger(MainPage.class);
     ListaNote listaNote = new ListaNote();
     Memoria memoria = new Memoria();
 
@@ -25,7 +21,7 @@ public class MainPage extends javax.swing.JFrame {
         return strings;
     }
 
-    //controllo per evitare duplicati by name
+    // controllo per evitare duplicati by name
     public boolean checkNameAlreadyExist(String outsideName) {
         boolean result = false;
         if (listaNote.listaNote.size() > 0) {
@@ -68,7 +64,8 @@ public class MainPage extends javax.swing.JFrame {
         }
     }
 
-    //si occupa di aggiornare il model per tenere i dati allineati con eventuali modifiche
+    // si occupa di aggiornare il model per tenere i dati allineati con eventuali
+    // modifiche
     public void updateComponenteListaNoteModel() {
         componenteListaNote.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = estraiArrayDiNomiDaListaNote();
@@ -86,9 +83,8 @@ public class MainPage extends javax.swing.JFrame {
         });
     }
 
-    
     public MainPage() {
-        logger.info("Inizializzazione MainPage...");
+        LoggerClass.info("Inizializzazione MainPage...");
         initComponents();
 
         updateComponenteListaNoteModel();
@@ -98,7 +94,6 @@ public class MainPage extends javax.swing.JFrame {
         bottoneSalvaNota.setEnabled(false);
         componenteListaNote.setSelectedIndex(0);
 
-        
         getContentPane().setBackground(new java.awt.Color(186, 140, 99));
         componenteListaNote.setBackground(new java.awt.Color(210, 180, 140));
         inputTitolo.setBackground(new java.awt.Color(210, 180, 140));
@@ -267,24 +262,23 @@ public class MainPage extends javax.swing.JFrame {
         if (allertOptionButton.isSelected()) {
             nuovaNota = new NotaConAllert(inputTitolo.getText(), inputTesto.getText(), allertOptionButton.isSelected());
             listaNote.pushaNotaInList(nuovaNota);
-            logger.debug("Creata nuova nota con allert: {}", nuovaNota.titolo);
+            LoggerClass.debug("Creata nuova nota con allert: {}", nuovaNota.titolo);
         } else {
             nuovaNota = new Nota(inputTitolo.getText(), inputTesto.getText());
             listaNote.pushaNotaInList(nuovaNota);
-            logger.debug("Creata nuova nota: {}", nuovaNota.titolo);
+            LoggerClass.debug("Creata nuova nota: {}", nuovaNota.titolo);
         }
 
         try {
-            memoria.salvaEControllaDuplicatiInCSV(nuovaNota);
+            memoria.salvaNota(nuovaNota);
             updateComponenteListaNoteModel();
             inputTitolo.setText("Inserisci un titolo");
             inputTesto.setText("Scrivi una nota");
             allertOptionButton.setSelected(false);
 
-            logger.info("Nota salvata con successo: {}", nuovaNota.titolo);
+            LoggerClass.info("Nota salvata con successo: {}", nuovaNota.titolo);
         } catch (Exception ex) {
-            logger.error("Errore durante il salvataggio della nota: {}", nuovaNota.titolo, ex);
-            System.out.println(ex);
+            LoggerClass.error("Errore durante il salvataggio della nota: {}", nuovaNota.titolo, ex);
         }
 
         // initComponents();
@@ -292,7 +286,7 @@ public class MainPage extends javax.swing.JFrame {
     }
 
     private void allertOptionButtonActionPerformed(java.awt.event.ActionEvent evt) {
-       
+
     }
 
     // il click sulla singola nota per aprirla
@@ -300,7 +294,7 @@ public class MainPage extends javax.swing.JFrame {
         Object valoreSelezionato = componenteListaNote.getSelectedValue();
 
         if (valoreSelezionato != null) {
-            logger.info("Apertura nota selezionata: {}", valoreSelezionato);
+            LoggerClass.info("Apertura nota selezionata: {}", valoreSelezionato);
             final int posizioneOggettoCorrente = listaNote.returnJsonPositionInList(valoreSelezionato.toString());
 
             java.awt.EventQueue.invokeLater(new Runnable() {
@@ -318,9 +312,9 @@ public class MainPage extends javax.swing.JFrame {
         }
     }
 
-   //dovrebbe far parte del codice generato da netbeans
+    // dovrebbe far parte del codice generato da netbeans
     public static void main(String args[]) {
-        
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -337,7 +331,7 @@ public class MainPage extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-   
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainPage().setVisible(true);
@@ -345,7 +339,8 @@ public class MainPage extends javax.swing.JFrame {
         });
     }
 
-    // il listener sugli input per intercettare gli eventi su testo titolo e bottone salva nota
+    // il listener sugli input per intercettare gli eventi su testo titolo e bottone
+    // salva nota
     class MyDocumentListener implements DocumentListener {
 
         private void handleInputEvent(DocumentEvent event) {
@@ -356,10 +351,9 @@ public class MainPage extends javax.swing.JFrame {
 
             labelTitoloInvalido.setVisible(nomeEsistente || titoloUnivoco.length() == 0);
 
-            bottoneSalvaNota.setEnabled(!nomeEsistente && testoInput.length() > 0 
-                    && !"".equals(titoloUnivoco) 
-                    && !"Inserisci un titolo".equals(titoloUnivoco)
-            );
+            bottoneSalvaNota.setEnabled(!nomeEsistente && testoInput.length() > 0
+                    && !"".equals(titoloUnivoco)
+                    && !"Inserisci un titolo".equals(titoloUnivoco));
 
         }
 

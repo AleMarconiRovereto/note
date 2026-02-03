@@ -1,100 +1,69 @@
-
 package Memoria;
 
 import Note.Nota;
-import Note.NotaConAllert;
-import java.util.List;
-import java.io.FileWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 import java.util.stream.Collectors;
-
+import utils.LoggerClass;
 
 public class Memoria {
-    
-    private static final String SEPARATORE = ";";
-    public String MEMORIA_FILE_PATH = "memoria.csv";
-    
-   
-    
-    private void scriviInCSV( List<Nota> note) throws Exception {
-        List<String> righe = new ArrayList<>();
-        for (Nota datiNota : note) {
-            String rigaCSV = datiNota.titolo + SEPARATORE + datiNota.testo + SEPARATORE + datiNota.timestamp.toString();
-            if (datiNota instanceof NotaConAllert) {
-                NotaConAllert datoNotaConAllert = (NotaConAllert) datiNota;
-                rigaCSV = rigaCSV + SEPARATORE + datoNotaConAllert.allertAttivo;
-            }
-        
-            rigaCSV = rigaCSV + "\n";
-            System.out.println(rigaCSV);
-            righe.add(rigaCSV);
+
+    public String MEMORIA_FILE_PATH = "note.ser";
+
+    //salva lista di note su file tramite serializzazione.
+    private void salvaTutteLeNote(List<Nota> note) throws Exception {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(MEMORIA_FILE_PATH))) {
+            oos.writeObject(note);
+            LoggerClass.debug("Note serializzate correttamente su ", MEMORIA_FILE_PATH);
+        } catch (IOException e) {
+            LoggerClass.error("Errore durante la serializzazione delle note", e);
+            throw e;
         }
-        Files.write(Paths.get(MEMORIA_FILE_PATH), righe);
-    }
-    
-    //legge i dati da CSV
-    public List<Nota> leggiDaFileCSV() throws Exception {
-        List<Nota> lista = new ArrayList<>();
-        Path path = Paths.get(MEMORIA_FILE_PATH);
-
-        if (!Files.exists(path)){
-            return lista;
-        } 
-
-        List<String> righe = Files.readAllLines(path);
-        for (String riga : righe) {
-            String[] parts = riga.split(";");
-        
-            if (parts.length == 3) {
-                Nota notaDaLeggere = new Nota(parts[0], parts[1], LocalDateTime.parse(parts[2]));
-                lista.add(notaDaLeggere);
-            }
-
-            if (parts.length == 4) {
-                NotaConAllert notaDaLeggere = new NotaConAllert( parts[0], parts[1], LocalDateTime.parse(parts[2]), Boolean.parseBoolean(parts[3]));
-                lista.add(notaDaLeggere);
-            }
-        }
-
-        return lista;
     }
 
-    
-    
-    // salva l'oggetto nel CSV solo se il titolo è univoco
-    public void salvaEControllaDuplicatiInCSV(Nota notaDaSalvare) throws Exception {
-        List<Nota> note = leggiDaFileCSV();
+    // legge la lista di note dal file tramite deserializzazione.
+     
+    public List<Nota> caricaNote() throws Exception {
+        File file = new File(MEMORIA_FILE_PATH);
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return (List<Nota>) ois.readObject();
+            
+        } catch (IOException | ClassNotFoundException e) {
+            LoggerClass.error("Errore durante la deserializzazione delle note", e);
+            return new ArrayList<>();
+        }
+    }
+
+    public void salvaNota(Nota notaDaSalvare) throws Exception {
+        List<Nota> note = caricaNote();
         for (Nota nota : note) {
             if (nota.titolo.equals(notaDaSalvare.titolo)) {
-                System.out.println("Oggetto con nome già esistente: " + notaDaSalvare.titolo);
+                LoggerClass.warn("Titolo già esistente: ", notaDaSalvare.titolo);
                 return;
             }
         }
         note.add(notaDaSalvare);
-        scriviInCSV(note); //salva effettivamente
-        System.out.println("Oggetto salvato: " + notaDaSalvare.titolo);
+        salvaTutteLeNote(note);
+        LoggerClass.info("Nota salvata in memoria: ", notaDaSalvare.titolo);
     }
 
-    // rimuove un singolo oggetto dal CSV tramite nome
-    public void rimuoviDaCSV(Nota notaDaRimuovereDaCSV) throws Exception {
-        List<Nota> oggetti = leggiDaFileCSV();
-        List<Nota> filtrati = oggetti.stream().filter(o -> !o.titolo.equals(notaDaRimuovereDaCSV.titolo)).collect(Collectors.toList());
-        if (filtrati.size() == oggetti.size()) {
-            System.out.println("Nessun oggetto trovato con nome: " + notaDaRimuovereDaCSV.titolo);
+    public void rimuoviNota(Nota notaDaRimuovere) throws Exception {
+        List<Nota> note = caricaNote();
+        // uso di lambda
+        List<Nota> filtrate = note.stream().filter(notaArgomento -> !notaArgomento.titolo.equals(notaDaRimuovere.titolo)).collect(Collectors.toList());
+        
+        if (filtrate.size() == note.size()) {
+            LoggerClass.warn("Nessuna nota trovata con titolo: ", notaDaRimuovere.titolo);
         } else {
-            scriviInCSV(filtrati);
-            //System.out.println("Oggetto rimosso: " + this.nome);
+            
+            salvaTutteLeNote(filtrate);
+            LoggerClass.info("Nota rimossa dalla memoria: ", notaDaRimuovere.titolo);
         }
     }
 
-    
-    
-    
-    
-    
 }

@@ -4,7 +4,7 @@ import Note.ListaNote;
 import Note.NotaConAllert;
 import Note.Nota;
 import javax.swing.JOptionPane;
-
+import utils.LoggerClass;
 
 public class PaginaReminders extends javax.swing.JFrame {
 
@@ -28,7 +28,7 @@ public class PaginaReminders extends javax.swing.JFrame {
         });
     }
 
-    //prende solo i nomi delle note che hanno allert true
+    // prende solo i nomi delle note che hanno allert true
     public String[] estraiArrayDiNomiDaNoteConAllert() {
         int count = 0;
         for (int i = 0; i < listaNote.listaNote.size(); i++) {
@@ -54,11 +54,12 @@ public class PaginaReminders extends javax.swing.JFrame {
         return strings;
     }
 
-  
     public PaginaReminders() {
         initComponents();
     }
-    // prende gli argomenti necssari tra cui il context esterno per aggiornare il model
+
+    // prende gli argomenti necssari tra cui il context esterno per aggiornare il
+    // model
     public PaginaReminders(Memoria memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna) {
         this.memoria = memoriaEsterna;
         this.contestoPrincipale = contestoPrincipale;
@@ -142,7 +143,8 @@ public class PaginaReminders extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    // gestisce il click sui valori della lista par aprire notaAperta
+     // gestisce il click sui valori della lista par aprire notaAperta
+
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {
         Object valoreSelezionato = jList1.getSelectedValue();
 
@@ -174,10 +176,10 @@ public class PaginaReminders extends javax.swing.JFrame {
                 if (notaConAllert.isAllertAttivo()) {
                     notaConAllert.setAllertAttivo(false);
                     try {
-                        memoria.rimuoviDaCSV(nota);
-                        memoria.salvaEControllaDuplicatiInCSV(nota);
+                        memoria.rimuoviNota(nota);
+                        memoria.salvaNota(nota);
                     } catch (Exception e) {
-                        System.out.println(e);
+                        LoggerClass.error("Errore durante la disattivazione automatica dell'allert", e);
                     }
                 }
             }
@@ -195,11 +197,9 @@ public class PaginaReminders extends javax.swing.JFrame {
         }
         super.dispose();
     }
-    
-    
-    
+
     public static void main(String args[]) {
-      
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -220,9 +220,7 @@ public class PaginaReminders extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(PaginaReminders.class.getName()).log(java.util.logging.Level.SEVERE,
                     null, ex);
         }
-       
 
-      
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new PaginaReminders().setVisible(true);

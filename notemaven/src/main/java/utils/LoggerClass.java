@@ -1,14 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils;
 
-/**
- *
- * @author aleAccount
- */
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class LoggerClass {
-    
+    private static final Logger logger = LogManager.getLogger("NoteMavenLogger");
+
+    private LoggerClass() {
+    }
+
+    public static void info(String message) {
+        logger.info(message);
+    }
+
+    public static void info(String message, Object... params) {
+        logger.info(message, params);
+    }
+
+    public static void debug(String message, Object... params) {
+        logger.debug(message, params);
+    }
+
+    public static void error(String message) {
+        logger.error(message);
+    }
+
+    public static void error(String message, Throwable t) {
+        logger.error(message, t);
+    }
+
+    public static void error(String message, Object... params) {
+        logger.error(message, params);
+    }
+
+    public static void warn(String message) {
+        logger.warn(message);
+    }
+
+    public static void warn(String message, Object... params) {
+        logger.warn(message, params);
+    }
 }
