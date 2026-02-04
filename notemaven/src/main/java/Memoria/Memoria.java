@@ -16,9 +16,9 @@ public class Memoria {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(MEMORIA_FILE_PATH))) {
             oos.writeObject(note);
             LoggerClass.debug("Note serializzate correttamente su ", MEMORIA_FILE_PATH);
-        } catch (IOException e) {
-            LoggerClass.error("Errore durante la serializzazione delle note", e);
-            throw e;
+        } catch (IOException ex) {
+            LoggerClass.error("Errore durante la serializzazione delle note", ex);
+            throw ex;
         }
     }
 
@@ -33,8 +33,8 @@ public class Memoria {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Nota>) ois.readObject();
             
-        } catch (IOException | ClassNotFoundException e) {
-            LoggerClass.error("Errore durante la deserializzazione delle note", e);
+        } catch (IOException | ClassNotFoundException ex) {
+            LoggerClass.error("Errore durante la deserializzazione delle note", ex);
             return new ArrayList<>();
         }
     }

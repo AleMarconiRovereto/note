@@ -12,7 +12,7 @@ public class ListaNote {
             Memoria memoria = new Memoria();
             List<Nota> datiDaMemoria = memoria.caricaNote();
             this.listaNote = new ArrayList<>(datiDaMemoria);
-        } catch (Exception e) {
+        } catch (Exception ex) {
             this.listaNote = new ArrayList<>();
         }
     }

@@ -151,6 +151,8 @@ public class PaginaReminders extends javax.swing.JFrame {
         if (valoreSelezionato != null) {
             final int posizioneOggettoCorrente = listaNote.returnJsonPositionInList(valoreSelezionato.toString());
 
+            
+            
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     PaginaNotaAperta pna = new PaginaNotaAperta(memoria, contestoPrincipale, listaNote,

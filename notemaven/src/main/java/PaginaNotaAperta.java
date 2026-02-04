@@ -16,8 +16,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
 
     // prende gli argomenti necssari tra cui il context esterno per aggiornare il
     // model
-    public PaginaNotaAperta(Memoria memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna,
-            int indexNota, javax.swing.JFrame paginaPadreEsterna) {
+    public PaginaNotaAperta(Memoria memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna, int indexNota, javax.swing.JFrame paginaPadreEsterna) {
         this.contestoPrincipale = contestoPrincipale;
         this.listaNote = listaNoteEsterna;
         this.currentIndex = indexNota;
@@ -47,9 +46,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         super.dispose();
     }
 
-    // utile per risolvere il problema della navigazione di note
-    // perchè questa pagina può essere aperta da 2 pagine diverse
-    // ognuna con la sua logica (saltare note senza alert)
+    // utile per risolvere il problema della navigazione di note perchè questa pagina può essere aperta da 2 pagine diverse ognuna con la sua logica (saltare note senza alert)
     private int findNextValidIndex(int start, boolean forward) {
         if (paginaPadre instanceof PaginaReminders) {
             int i = forward ? start + 1 : start - 1;
@@ -224,8 +221,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         Nota notaVecchia = listaNote.listaNote.get(this.currentIndex);
 
         if (bottoneAllert.isSelected()) {
-            nuovaNota = new NotaConAllert(labelTitoloNota.getText(), inputTestoNota.getText(), notaVecchia.timestamp,
-                    bottoneAllert.isSelected());
+            nuovaNota = new NotaConAllert(labelTitoloNota.getText(), inputTestoNota.getText(), notaVecchia.timestamp, bottoneAllert.isSelected());
         } else {
             nuovaNota = new Nota(labelTitoloNota.getText(), inputTestoNota.getText(), notaVecchia.timestamp);
         }
@@ -243,6 +239,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
 
             setCurrentValue(nuovaNota);
         } catch (Exception ex) {
+            
             LoggerClass.error("Errore durante il salvataggio della nota modificata", ex);
         }
     }
@@ -263,7 +260,10 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
             contestoPrincipale.updateComponenteListaNoteModel();
 
             if (paginaPadre instanceof PaginaReminders) {
+                
+                
                 ((PaginaReminders) paginaPadre).updateComponenteListaRemindersModel();
+                
             }
 
             int nextValid = findNextValidIndex(currentIndex - 1, true);
@@ -282,8 +282,8 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
                     this.dispose();
                 }
             }
-        } catch (Exception e) {
-            LoggerClass.error("Errore durante l'eliminazione della nota", e);
+        } catch (Exception ex) {
+            LoggerClass.error("Errore durante l'eliminazione della nota", ex);
         }
     }
 

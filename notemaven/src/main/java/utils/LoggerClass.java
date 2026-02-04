@@ -3,6 +3,8 @@ package utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+// classw wrapper per il log4j x istanziarlo solo una volta
+
 public class LoggerClass {
     private static final Logger logger = LogManager.getLogger("NoteMavenLogger");
 
@@ -40,4 +42,6 @@ public class LoggerClass {
     public static void warn(String message, Object... params) {
         logger.warn(message, params);
     }
+    
+    
 }

@@ -64,8 +64,7 @@ public class MainPage extends javax.swing.JFrame {
         }
     }
 
-    // si occupa di aggiornare il model per tenere i dati allineati con eventuali
-    // modifiche
+    // si occupa di aggiornare il model per tenere i dati allineati con eventuali modifiche
     public void updateComponenteListaNoteModel() {
         componenteListaNote.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = estraiArrayDiNomiDaListaNote();
@@ -281,7 +280,6 @@ public class MainPage extends javax.swing.JFrame {
             LoggerClass.error("Errore durante il salvataggio della nota: {}", nuovaNota.titolo, ex);
         }
 
-        // initComponents();
         updateComponenteListaNoteModel();
     }
 
@@ -299,8 +297,7 @@ public class MainPage extends javax.swing.JFrame {
 
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
-                    PaginaNotaAperta pna = new PaginaNotaAperta(memoria, MainPage.this, listaNote,
-                            posizioneOggettoCorrente, MainPage.this);
+                    PaginaNotaAperta pna = new PaginaNotaAperta(memoria, MainPage.this, listaNote, posizioneOggettoCorrente, MainPage.this);
                     pna.setLocationRelativeTo(MainPage.this);
                     java.awt.Point p = pna.getLocation();
                     pna.setLocation(p.x + 30, p.y + 30);
@@ -351,9 +348,7 @@ public class MainPage extends javax.swing.JFrame {
 
             labelTitoloInvalido.setVisible(nomeEsistente || titoloUnivoco.length() == 0);
 
-            bottoneSalvaNota.setEnabled(!nomeEsistente && testoInput.length() > 0
-                    && !"".equals(titoloUnivoco)
-                    && !"Inserisci un titolo".equals(titoloUnivoco));
+            bottoneSalvaNota.setEnabled(!nomeEsistente && testoInput.length() > 0 && !"".equals(titoloUnivoco) && !"Inserisci un titolo".equals(titoloUnivoco));
 
         }
 
