@@ -1,5 +1,7 @@
 
-import Memoria.Memoria;
+
+
+import Memoria.MemoriaPrincipale;
 import Note.ListaNote;
 import Note.NotaConAllert;
 import Note.Nota;
@@ -8,10 +10,11 @@ import utils.LoggerClass;
 
 public class PaginaReminders extends javax.swing.JFrame {
 
-    Memoria memoria;
+    MemoriaPrincipale memoria;
     MainPage contestoPrincipale;
     ListaNote listaNote;
 
+    // aggiorna la lista del componente jframe nel model
     public void updateComponenteListaRemindersModel() {
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = estraiArrayDiNomiDaNoteConAllert();
@@ -58,9 +61,8 @@ public class PaginaReminders extends javax.swing.JFrame {
         initComponents();
     }
 
-    // prende gli argomenti necssari tra cui il context esterno per aggiornare il
-    // model
-    public PaginaReminders(Memoria memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna) {
+    // prende gli argomenti necssari tra cui il context esterno per aggiornare il model
+    public PaginaReminders(MemoriaPrincipale memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna) {
         this.memoria = memoriaEsterna;
         this.contestoPrincipale = contestoPrincipale;
         this.listaNote = listaNoteEsterna;
@@ -79,7 +81,7 @@ public class PaginaReminders extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -89,6 +91,7 @@ public class PaginaReminders extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 204, 204));
 
         jList1.setBackground(new java.awt.Color(255, 230, 230));
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -112,34 +115,32 @@ public class PaginaReminders extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 365,
-                                                Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(bottoneDisattivaAllert)
-                                                        .addComponent(jLabel1)
-                                                        .addComponent(jLabel2))
-                                                .addGap(0, 0, Short.MAX_VALUE)))
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(bottoneDisattivaAllert)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel1)
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(bottoneDisattivaAllert)
-                                .addContainerGap(60, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(3, 3, 3)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bottoneDisattivaAllert)
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -151,8 +152,6 @@ public class PaginaReminders extends javax.swing.JFrame {
         if (valoreSelezionato != null) {
             final int posizioneOggettoCorrente = listaNote.returnJsonPositionInList(valoreSelezionato.toString());
 
-            
-            
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     PaginaNotaAperta pna = new PaginaNotaAperta(memoria, contestoPrincipale, listaNote,

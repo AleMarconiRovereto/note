@@ -3,7 +3,8 @@ package utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// classw wrapper per il log4j x istanziarlo solo una volta
+// classw wrapper per il log4j per istanziarlo solo una volta
+// alla fine potrebbe non servire
 
 public class LoggerClass {
     private static final Logger logger = LogManager.getLogger("NoteMavenLogger");
@@ -27,8 +28,8 @@ public class LoggerClass {
         logger.error(message);
     }
 
-    public static void error(String message, Throwable t) {
-        logger.error(message, t);
+    public static void error(String message, Throwable fullStackTrace) {
+        logger.error(message, fullStackTrace);
     }
 
     public static void error(String message, Object... params) {

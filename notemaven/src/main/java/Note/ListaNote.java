@@ -1,15 +1,14 @@
 package Note;
 
-import Memoria.Memoria;
+import Memoria.MemoriaPrincipale;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListaNote {
     public ArrayList<Nota> listaNote;
 
-    public ListaNote() {
+    public ListaNote(MemoriaPrincipale memoria) {
         try {
-            Memoria memoria = new Memoria();
             List<Nota> datiDaMemoria = memoria.caricaNote();
             this.listaNote = new ArrayList<>(datiDaMemoria);
         } catch (Exception ex) {
@@ -22,19 +21,24 @@ public class ListaNote {
     }
 
     public void removeNotaInListByPosition(int posizioneNotaDaRimuovere) {
+        
         this.listaNote.remove(posizioneNotaDaRimuovere);
     }
 
     public void setListaNote(ArrayList<Nota> listaNoteEsterna) {
+        
         this.listaNote = listaNoteEsterna;
     }
 
     public int returnJsonPositionInList(String nomeDaTrovare) {
+        
         for (int i = 0; i < this.listaNote.size(); i++) {
+            
             if (nomeDaTrovare.equals(this.listaNote.get(i).titolo)) {
-                return i;
+                return i;            
             }
         }
+        
         return -1;
     }
 

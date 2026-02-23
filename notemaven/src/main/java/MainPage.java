@@ -1,4 +1,5 @@
-import Memoria.Memoria;
+
+import Memoria.MemoriaPrincipale;
 import Note.ListaNote;
 import Note.Nota;
 import Note.NotaConAllert;
@@ -9,8 +10,8 @@ import utils.LoggerClass;
 
 public class MainPage extends javax.swing.JFrame {
 
-    ListaNote listaNote = new ListaNote();
-    Memoria memoria = new Memoria();
+    ListaNote listaNote;
+    MemoriaPrincipale memoria;
 
     // estrae un array di strighe che sono i nomi delle note
     public String[] estraiArrayDiNomiDaListaNote() {
@@ -83,7 +84,14 @@ public class MainPage extends javax.swing.JFrame {
     }
 
     public MainPage() {
-        LoggerClass.info("Inizializzazione MainPage...");
+        this("note.ser");
+    }
+
+    public MainPage(String storagePath) {
+        LoggerClass.info("Inizializzazione MainPage con path: ", storagePath);
+        this.memoria = new MemoriaPrincipale(storagePath);
+        this.listaNote = new ListaNote(memoria);
+
         initComponents();
 
         updateComponenteListaNoteModel();
@@ -101,6 +109,7 @@ public class MainPage extends javax.swing.JFrame {
         stampaNoteConAllertAttivo();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -147,6 +156,7 @@ public class MainPage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        componenteListaNote.setBackground(new java.awt.Color(210, 180, 140));
         componenteListaNote.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
 
@@ -172,11 +182,13 @@ public class MainPage extends javax.swing.JFrame {
             }
         });
 
+        inputTesto.setBackground(new java.awt.Color(210, 180, 140));
         inputTesto.setColumns(20);
         inputTesto.setRows(5);
         inputTesto.setText("Scrivi la tua nota");
         jScrollPane4.setViewportView(inputTesto);
 
+        inputTitolo.setBackground(new java.awt.Color(210, 180, 140));
         inputTitolo.setText("Inserisci un titolo");
         inputTitolo.setToolTipText("");
 
@@ -297,7 +309,8 @@ public class MainPage extends javax.swing.JFrame {
 
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
-                    PaginaNotaAperta pna = new PaginaNotaAperta(memoria, MainPage.this, listaNote, posizioneOggettoCorrente, MainPage.this);
+                    PaginaNotaAperta pna = new PaginaNotaAperta(memoria, MainPage.this, listaNote,
+                            posizioneOggettoCorrente, MainPage.this);
                     pna.setLocationRelativeTo(MainPage.this);
                     java.awt.Point p = pna.getLocation();
                     pna.setLocation(p.x + 30, p.y + 30);
@@ -311,6 +324,7 @@ public class MainPage extends javax.swing.JFrame {
 
     // dovrebbe far parte del codice generato da netbeans
     public static void main(String args[]) {
+        final String path = (args.length > 0) ? args[0] : "note.ser";
 
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -331,13 +345,12 @@ public class MainPage extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainPage().setVisible(true);
+                new MainPage(path).setVisible(true);
             }
         });
     }
 
-    // il listener sugli input per intercettare gli eventi su testo titolo e bottone
-    // salva nota
+    // il listener sugli input per intercettare gli eventi su testo titolo e botton salva nota
     class MyDocumentListener implements DocumentListener {
 
         private void handleInputEvent(DocumentEvent event) {

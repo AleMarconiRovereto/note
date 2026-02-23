@@ -1,5 +1,7 @@
 
-import Memoria.Memoria;
+
+
+import Memoria.MemoriaPrincipale;
 import Note.ListaNote;
 import Note.Nota;
 import Note.NotaConAllert;
@@ -8,15 +10,15 @@ import utils.LoggerClass;
 
 public class PaginaNotaAperta extends javax.swing.JFrame {
 
-    Memoria memoria;
+    MemoriaPrincipale memoria;
     MainPage contestoPrincipale;
     javax.swing.JFrame paginaPadre;
     ListaNote listaNote;
     int currentIndex;
 
-    // prende gli argomenti necssari tra cui il context esterno per aggiornare il
-    // model
-    public PaginaNotaAperta(Memoria memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna, int indexNota, javax.swing.JFrame paginaPadreEsterna) {
+    // prende gli argomenti necssari tra cui il context esterno per aggiornare il model
+    public PaginaNotaAperta(MemoriaPrincipale memoriaEsterna, MainPage contestoPrincipale, ListaNote listaNoteEsterna,
+            int indexNota, javax.swing.JFrame paginaPadreEsterna) {
         this.contestoPrincipale = contestoPrincipale;
         this.listaNote = listaNoteEsterna;
         this.currentIndex = indexNota;
@@ -46,7 +48,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         super.dispose();
     }
 
-    // utile per risolvere il problema della navigazione di note perchè questa pagina può essere aperta da 2 pagine diverse ognuna con la sua logica (saltare note senza alert)
+    // utile per risolvere il problema della navigazione di note perchè questa pagina può essere aperta da 2 pagine diverse ognuna con la sua logica
     private int findNextValidIndex(int start, boolean forward) {
         if (paginaPadre instanceof PaginaReminders) {
             int i = forward ? start + 1 : start - 1;
@@ -88,7 +90,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -102,7 +104,9 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         bottoneElimina = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 153));
 
+        inputTestoNota.setBackground(new java.awt.Color(255, 255, 204));
         inputTestoNota.setColumns(20);
         inputTestoNota.setRows(5);
         jScrollPane1.setViewportView(inputTestoNota);
@@ -144,66 +148,52 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jScrollPane1,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, 376,
-                                                                Short.MAX_VALUE)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(btnBack)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(bottoneSalva,
-                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                        Short.MAX_VALUE)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(btnNext))
-                                                        .addComponent(labelTitoloNota,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addContainerGap())
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(bottoneAllert)
-                                                        .addComponent(labelTimestamp))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(bottoneElimina)
-                                                .addGap(22, 22, 22)))));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnBack)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(bottoneSalva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnNext))
+                            .addComponent(labelTitoloNota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(bottoneAllert)
+                            .addComponent(labelTimestamp))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bottoneElimina)
+                        .addGap(22, 22, 22))))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(labelTitoloNota)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(labelTimestamp)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(bottoneAllert)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48,
-                                                        Short.MAX_VALUE)
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(btnBack)
-                                                        .addComponent(btnNext)
-                                                        .addComponent(bottoneSalva))
-                                                .addGap(21, 21, 21))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(bottoneElimina)
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        Short.MAX_VALUE)))));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(labelTitoloNota)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(labelTimestamp)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bottoneAllert)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnBack)
+                            .addComponent(btnNext)
+                            .addComponent(bottoneSalva))
+                        .addGap(21, 21, 21))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(bottoneElimina)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -221,7 +211,8 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
         Nota notaVecchia = listaNote.listaNote.get(this.currentIndex);
 
         if (bottoneAllert.isSelected()) {
-            nuovaNota = new NotaConAllert(labelTitoloNota.getText(), inputTestoNota.getText(), notaVecchia.timestamp, bottoneAllert.isSelected());
+            nuovaNota = new NotaConAllert(labelTitoloNota.getText(), inputTestoNota.getText(), notaVecchia.timestamp,
+                    bottoneAllert.isSelected());
         } else {
             nuovaNota = new Nota(labelTitoloNota.getText(), inputTestoNota.getText(), notaVecchia.timestamp);
         }
@@ -239,7 +230,7 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
 
             setCurrentValue(nuovaNota);
         } catch (Exception ex) {
-            
+
             LoggerClass.error("Errore durante il salvataggio della nota modificata", ex);
         }
     }
@@ -260,10 +251,9 @@ public class PaginaNotaAperta extends javax.swing.JFrame {
             contestoPrincipale.updateComponenteListaNoteModel();
 
             if (paginaPadre instanceof PaginaReminders) {
-                
-                
+
                 ((PaginaReminders) paginaPadre).updateComponenteListaRemindersModel();
-                
+
             }
 
             int nextValid = findNextValidIndex(currentIndex - 1, true);

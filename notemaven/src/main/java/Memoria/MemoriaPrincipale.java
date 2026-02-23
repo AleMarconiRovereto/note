@@ -7,24 +7,31 @@ import java.util.List;
 import java.util.stream.Collectors;
 import utils.LoggerClass;
 
-public class Memoria {
+public class MemoriaPrincipale {
 
-    public String MEMORIA_FILE_PATH = "note.ser";
+    private final String MEMORIA_FILE_PATH;
 
-    //salva lista di note su file tramite serializzazione.
-    private void salvaTutteLeNote(List<Nota> note) throws Exception {
+    public MemoriaPrincipale(String filePath) {
+        this.MEMORIA_FILE_PATH = filePath;
+    }
+
+    // salva lista di note su file tramite serializzazione.
+    private void salvaTutteLeNote(List<Nota> note) throws ErroreSerializzazioneNoteException {
+        
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(MEMORIA_FILE_PATH))) {
             oos.writeObject(note);
             LoggerClass.debug("Note serializzate correttamente su ", MEMORIA_FILE_PATH);
+            
         } catch (IOException ex) {
-            LoggerClass.error("Errore durante la serializzazione delle note", ex);
-            throw ex;
+            
+            LoggerClass.error("Errore durante la serializzazione delle note", ex);   
+            throw new ErroreSerializzazioneNoteException("Non è stato possibile salvare le note su file: " + MEMORIA_FILE_PATH, ex);
         }
     }
 
     // legge la lista di note dal file tramite deserializzazione.
-     
-    public List<Nota> caricaNote() throws Exception {
+    public List<Nota> caricaNote() throws ErroreDeserializzazioneNoteException {
+        
         File file = new File(MEMORIA_FILE_PATH);
         if (!file.exists()) {
             return new ArrayList<>();
@@ -32,14 +39,31 @@ public class Memoria {
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Nota>) ois.readObject();
-            
+
         } catch (IOException | ClassNotFoundException ex) {
+            
             LoggerClass.error("Errore durante la deserializzazione delle note", ex);
-            return new ArrayList<>();
+            throw new ErroreDeserializzazioneNoteException("Non è stato possibile leggere le note dal file: " + MEMORIA_FILE_PATH, ex);
         }
     }
 
-    public void salvaNota(Nota notaDaSalvare) throws Exception {
+    // carica le note dal file filtrandole 
+    public List<Nota> caricaNoteFiltrate(FiltroNota filtro) throws ErroreDeserializzazioneNoteException {
+        
+        List<Nota> tutteLeNote = caricaNote();
+        List<Nota> filtrate = new ArrayList<>();
+
+        for (Nota notaCorrente : tutteLeNote) {
+            
+            if (filtro.accetta(notaCorrente)) {
+                filtrate.add(notaCorrente);
+            }
+        }
+        return filtrate;
+    }
+
+    // salva le note 
+    public void salvaNota(Nota notaDaSalvare) throws ErroreDeserializzazioneNoteException, ErroreSerializzazioneNoteException {
         List<Nota> note = caricaNote();
         for (Nota nota : note) {
             if (nota.titolo.equals(notaDaSalvare.titolo)) {
@@ -52,15 +76,16 @@ public class Memoria {
         LoggerClass.info("Nota salvata in memoria: ", notaDaSalvare.titolo);
     }
 
-    public void rimuoviNota(Nota notaDaRimuovere) throws Exception {
-        List<Nota> note = caricaNote();
-        // uso di lambda
-        List<Nota> filtrate = note.stream().filter(notaArgomento -> !notaArgomento.titolo.equals(notaDaRimuovere.titolo)).collect(Collectors.toList());
+    // rimuove una nota
+    public void rimuoviNota(Nota notaDaRimuovere) throws ErroreDeserializzazioneNoteException, ErroreSerializzazioneNoteException {
         
+        List<Nota> note = caricaNote();
+        List<Nota> filtrate = note.stream().filter(notaArgomento -> !notaArgomento.titolo.equals(notaDaRimuovere.titolo)).collect(Collectors.toList());
+
         if (filtrate.size() == note.size()) {
             LoggerClass.warn("Nessuna nota trovata con titolo: ", notaDaRimuovere.titolo);
         } else {
-            
+
             salvaTutteLeNote(filtrate);
             LoggerClass.info("Nota rimossa dalla memoria: ", notaDaRimuovere.titolo);
         }
